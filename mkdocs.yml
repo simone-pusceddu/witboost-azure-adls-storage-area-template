@@ -1,0 +1,9 @@
+site_name: "Azure Storage Account"
+site_description: "Documentation for Azure Storage Account with Data Lake gen2 container - internal storage area"
+
+nav:
+  - Azure Storage Account: index.md
+
+plugins:
+  - techdocs-core
+

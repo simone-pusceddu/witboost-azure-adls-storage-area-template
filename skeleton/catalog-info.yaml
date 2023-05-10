@@ -1,0 +1,48 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: ${{ values.identifier }}
+  description: ${{ values.description | dump }}
+  annotations:
+    gitlab.com/project-slug: ${{ values.destination.owner + "/" + values.destination.repo }}
+    backstage.io/techdocs-ref: dir:.
+  links:
+    - url: ${{ "https://"+ values.storageaccount +".blob.core.windows.net/" + values.container }}
+      title: Azure Storage Account with ADLS gen2 container
+      icon: cloud
+  tags:
+    - azure
+    - adlsgen2
+    - storage
+spec:
+  type: storage
+  lifecycle: experimental
+  owner: ${{ values.developmentGroup | dump }}
+  system: ${{ values.dataproduct | dump }}
+  domain: ${{ values.domain | dump }}
+  mesh:
+    name: ${{ values.name | dump }}
+    fullyQualifiedName: ${{ values.fullyQualifiedName | dump}}
+    description: ${{ values.description | dump}}
+    kind: storage
+    version: ${{ values.identifier.split(".")[2] + ".0.0" }}
+    infrastructureTemplateId: ${{ values.infrastructureTemplateId }}
+    useCaseTemplateId: ${{ values.useCaseTemplateId }}
+
+    dependsOn: []
+    platform: AZURE
+    technology: ADLSgen2
+
+    tags: [gcp, gcs, storage]
+    specific:
+      subscription: ${{ values.subscription | dump }}
+      resourcegroup: ${{ values.resourcegroup | dump }}
+      storageaccount: ${{ values.storageaccount | dump }}
+      container: ${{ values.container | dump }}
+      region: ${{ values.region | dump }}
+      performance: ${{ values.performance | dump }}
+      encryption: default
+      redundancy: LRS
+      accesstier: Hot
+      hierarchicalnamespace: true
+

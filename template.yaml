@@ -1,0 +1,211 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: azure-storage-adlsgen2-template.1
+  title: ADLS gen2 Storage Area Internal
+  description: This template can be used to create an Azure Storage account, including Data Lake storage gen2 for internal purposes of a Data Product.
+  mesh:
+    icon: https://camo.githubusercontent.com/a60d8af2fa30ff7a89eb926228a0d170adfc4ec05e082f41d21e3d3bb294effb/68747470733a2f2f73332d75732d776573742d312e616d617a6f6e6177732e636f6d2f73747269696d2d70726f642d6d656469612f77702d636f6e74656e742f75706c6f6164732f323031382f30362f32323133353530322f417a7572652d446174614c616b652d69636f6e2e706e67
+  tags:
+    - azure
+    - adlsgen2
+    - storage
+  annotations:
+    backstage.io/techdocs-ref: dir:.
+spec:
+  owner: agilelab
+  type: storage
+  parameters:
+    - title: Basic component information
+      required:
+        - name
+        - description
+        - domain
+        - dataproduct
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Display name for this storage area.
+          ui:field: EntityNamePicker
+          default: ADLSgen2 Internal Storage
+          ui:options:
+            allowArbitraryValues: true
+        fullyQualifiedName:
+          title: Fully Qualified Name
+          type: string
+          description: Storage component fully qualified name
+        description:
+          title: Description
+          type: string
+          description: Help others understand what this storage component is for
+        domain:
+          title: Domain
+          type: string
+          description: Domain of the Data Product this storage component belongs to
+          ui:field: EntityPicker
+          ui:options:
+            allowArbitraryValues: false
+            allowedKinds:
+              - Domain
+        dataproduct:
+          title: Data Product
+          type: string
+          description: Data Product this storage component belongs to
+          ui:field: EntityPicker
+          ui:filter:
+            - fieldName: domain
+              entityPath: spec.domain
+          ui:options:
+            allowArbitraryValues: false
+            allowedKinds:
+              - System
+        identifier:
+          title: Identifier
+          type: string
+          description: A unique identifier for the entity inside the domain. It will not be editable after creation and is expected to be a string that is sequences of [a-zA-Z] separated by any of [-_].
+          ui:field: ComponentIdentifierPicker
+          ui:options:
+            allowArbitraryValues: false
+        developmentGroup:
+          title: DevelopmentGroup
+          type: string
+          description: Data Product development group
+          ui:field: EntitySelectionPicker
+          ui:fieldName: dataproduct
+          ui:property: spec.owner
+          ui:options:
+            allowArbitraryValues: false
+    - title: Specific component information
+      required:
+        - subscription
+        - resourcegroup
+        - storageaccount
+        - container
+        - region
+        - performance
+      properties:
+        subscription:
+          title: Subscription
+          type: string
+          description: The Azure subscription to assign the Resource Group to. IT SHOULD ALREADY EXIST.
+          ui:field: EntityNamePicker
+          default: my-subscription
+          ui:options:
+            allowArbitraryValues: true
+        resourcegroup:
+          title: Resource Group
+          type: string
+          description: The Resource Group to assign the Storage Account to. IT SHOULD ALREADY EXIST.
+          ui:field: EntityNamePicker
+          default: my-resource-group
+          ui:options:
+            allowArbitraryValues: true
+        storageaccount:
+          title: Storage Account
+          type: string
+          description: A name for the storage account where to create the ADLSgen2 container. If not existing, it will be created.
+          ui:field: EntityNamePicker
+          default: MY-storage-account
+          minLength: 3
+          maxLength: 24
+          pattern: '^([a-z][a-z0-9]*)*$'
+          ui:autofocus: true
+          ui:help: 'Hint: The field can contain only lowercase letters and numbers. Name must be between 3 and 24 characters.'
+          ui:options:
+            allowArbitraryValues: true
+        container:
+          title: Container
+          type: string
+          description: The ADLS gen2 container to create into the storage account.
+          minLength: 3
+          maxLength: 63
+          default: MY-container
+          pattern: '^[a-z0-9]+(-[a-z0-9]+)*$'
+          ui:field: EntityNamePicker
+          ui:help: 'Hint: This name may only contain lowercase letters, numbers, and hyphens, and must begin with a letter or a number. Each hyphen must be preceded and followed by a non-hyphen character. The name must also be between 3 and 63 characters long'
+          ui:options:
+            allowArbitraryValues: true
+        region:
+          title: Region
+          type: string
+          description: Deployment Azure region. Only "West Europe" is currently allowed by our organization.
+          default: West Europe
+          enum:
+            - West Europe
+        performance:
+          title: Performance
+          type: string
+          description: Determine whether you want to have premium performance for block blobs, file shares, or page blobs in your storage account.
+          enum:
+            - Premium
+            - Standard
+    - title: Choose a target git location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - gitlab.com
+        rootDirectory:
+          title: Root Directory
+          type: string
+          description: Path that will be used as the root repository for this component. Default value is '.' which stands for the repository root. Otherwise, if you provide a name, a folder with that name will be created and this will become the root folder of this component.
+          default: .
+
+  steps:
+    - id: template
+      name: Fetch Skeleton + Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        targetPath: '${{ parameters.rootDirectory }}'
+        values:
+          name: '${{ parameters.name }}'
+          fullyQualifiedName: '${{ parameters.fullyQualifiedName }}'
+          description: '${{ parameters.description }}'
+          domain: '${{ parameters.domain }}'
+          dataproduct: '${{ parameters.dataproduct }}'
+          identifier: '${{ parameters.identifier }}'
+          developmentGroup: '${{ parameters.developmentGroup }}'
+          useCaseTemplateId: urn:dmb:utm:azure-storage-adlsgen2-template:0.0.0
+          infrastructureTemplateId: urn:dmb:itm:azure-storage-adlsgen2-provisioner:0
+          destination: '${{ parameters.repoUrl | parseRepoUrl }}'
+          displayName: '${{ parameters.displayName }}'
+          artifact_id: '${{ parameters.name }}'
+          useCaseTemplateVersion: 0.0.0
+          subscription: '${{ parameters.subscription }}'
+          resourcegroup: '${{ parameters.resourcegroup }}'
+          storageaccount: '${{ parameters.storageaccount }}'
+          container: '${{ parameters.container }}'
+          region: '${{ parameters.region }}'
+          performance: '${{ parameters.performance }}'
+
+    - id: publish
+      name: Publish
+      action: witboostMeshComponent:publish:gitlab
+      input:
+        allowedHosts: ['gitlab.com']
+        description: 'This is ${{ parameters.name }}'
+        repoUrl: '${{ parameters.repoUrl }}'
+        rootDirectory: '${{ parameters.rootDirectory }}'
+        dataproduct: '${{ parameters.dataproduct }}'
+
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: '${{ steps.publish.output.repoContentsUrl }}'
+        catalogInfoPath: '/${{ parameters.rootDirectory }}/catalog-info.yaml'
+
+  output:
+    links:
+      - title: Repository
+        url: '${{ steps.publish.output.remoteUrl }}'
+      - title: Open in catalog
+        icon: catalog
+        entityRef: '${{ steps.register.output.entityRef }}'

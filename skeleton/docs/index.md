@@ -5,4 +5,3 @@ This template can be used to create an Azure Data Lake storage gen2 for internal
 Only West Europe region is currently allowed.
 
 Performance are all available, while redundancy is LRS by default being local storage (cheapest policy).
-

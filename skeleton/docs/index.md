@@ -1,7 +1,35 @@
-# ADLSgen2 Internal Storage Template
+# ${{ values.name }}
 
-This template can be used to create an Azure Data Lake storage gen2 for internal storage of a Data Product.
 
-Only West Europe region is currently allowed.
+## Component Information
 
-Performance are all available, while redundancy is LRS by default being local storage (cheapest policy).
+| Field Name               | Value                                                                                                               |
+|:-------------------------|:--------------------------------------------------------------------------------------------------------------------|
+| **Name**                 | ${{ values.name }}                                                                                                  |
+| **Fully Qualified Name** | ${{ values.fullyQualifiedName }}                                                                                    |
+| **Description**          | ${{ values.description }}                                                                                           |
+| **Domain**               | ${{ values.domain                                                                                                   | replace(r/domain:| |-/, "") }}             |
+| **Data Product**         | ${{ values.dataproduct.split(".")[1]                                                                                | replace(r/ |-/g, "") }} |
+| **Identifier**           | ${{ values.identifier }}                                                                                            |
+| **Depends On**           | ${{ values.dependsOn }}                                                                                             |
+{%- if values.tags | length > 0 %}                                                                                                       
+| **Tags**                 | {%- for i in values.tags %} - tagFQN: ${{ i }}<br/>&nbsp;&nbsp;source: Tag<br/>&nbsp;&nbsp;labelType: Manual<br/>&nbsp;&nbsp;state: Confirmed<br/><br/>
+{%- endfor %} |
+{%- else %}
+|**Tags**| [] |
+{%- endif %}
+
+## ADLS Gen2 Storage Area Deployment Information
+
+| Field Name                 | Value                               |
+|:---------------------------|:------------------------------------|
+| **Subscription**           | ${{ values.subscription }}          |
+| **Resource Group**         | ${{ values.resourceGroup }}         |
+| **Storage Account**        | ${{ values.storageAccount }}        |
+| **Container**              | ${{ values.container }}             |
+| **Region**                 | ${{ values.region }}                |
+| **Performance**            | ${{ values.performance }}           |
+| **Redundancy**             | ${{ values.redundancy }}            |
+| **Access Tier**            | ${{ values.accessTier }}            |
+| **Hierarchical Namespace** | ${{ values.hierarchicalNamespace }} |
+| **Encryption**             | default                             |

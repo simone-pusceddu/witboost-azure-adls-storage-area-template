@@ -1,8 +1,8 @@
-site_name: "Azure Storage Account"
-site_description: "Documentation for Azure Storage Account with Data Lake gen2 container - internal storage area"
+site_name: "ADLS Gen2 Storage Template"
+site_description: "Create a ADLS Gen2 Storage for a Data Product"
 
 nav:
-  - Azure Storage Account: index.md
+  - Template Usage: index.md
 
 plugins:
   - techdocs-core

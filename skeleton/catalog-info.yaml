@@ -2,13 +2,14 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: ${{ values.identifier }}
-  description: ${{ values.description | dump }}
+  description: |
+        "${{ values.description }}"
   annotations:
-    gitlab.com/project-slug: ${{ values.destination.owner + "/" + values.destination.repo }}
+    gitlab.com/project-slug: 'AgileDMBSandbox/${{orgname}}/mesh.repository/${{ values.domain | replace(r/domain:| |-/, "") }}/${{ values.dataproduct.split(".")[1] | replace(r/ |-/g, "") }}/${{ values.name.split(" ") | join("") | lower }}'
     backstage.io/techdocs-ref: dir:.
   links:
-    - url: ${{ "https://"+ values.storageaccount +".blob.core.windows.net/" + values.container }}
-      title: Azure Storage Account with ADLS gen2 container
+    - url: ${{ "https://"+ values.storageAccount +".blob.core.windows.net/" + values.container }}
+      title: Azure Storage Account with ADLSgen2 container
       icon: cloud
   tags:
     - azure
@@ -17,32 +18,35 @@ metadata:
 spec:
   type: storage
   lifecycle: experimental
-  owner: ${{ values.developmentGroup | dump }}
-  system: ${{ values.dataproduct | dump }}
-  domain: ${{ values.domain | dump }}
+  owner: ${{ values.developmentGroup }}
+  system: ${{ values.dataproduct }}
+  domain: ${{ values.domain }}
   mesh:
-    name: ${{ values.name | dump }}
-    fullyQualifiedName: ${{ values.fullyQualifiedName | dump}}
-    description: ${{ values.description | dump}}
+    name: ${{ values.name }}
+    fullyQualifiedName: ${{ values.fullyQualifiedName }}
+    description: | 
+          "${{ values.description }}"
     kind: storage
     version: ${{ values.identifier.split(".")[2] + ".0.0" }}
     infrastructureTemplateId: ${{ values.infrastructureTemplateId }}
     useCaseTemplateId: ${{ values.useCaseTemplateId }}
-
-    dependsOn: []
-    platform: AZURE
+    dependsOn: {% if values.dependsOn | length > 0 %}{% for i in values.dependsOn %}
+      - ${{ i }}{% endfor %}{% else %}[]{% endif %}
+    platform: Azure
     technology: ADLSgen2
-
-    tags: [gcp, gcs, storage]
+    tags: {% if values.tags | length > 0 %}{% for i in values.tags %}
+      - tagFQN: ${{ i }}
+        source: Tag
+        labelType: Manual
+        state: Confirmed{% endfor %}{% else %}[]{% endif %}
     specific:
-      subscription: ${{ values.subscription | dump }}
-      resourcegroup: ${{ values.resourcegroup | dump }}
-      storageaccount: ${{ values.storageaccount | dump }}
-      container: ${{ values.container | dump }}
-      region: ${{ values.region | dump }}
-      performance: ${{ values.performance | dump }}
+      subscription: ${{ values.subscription }}
+      resourceGroup: ${{ values.resourceGroup }}
+      storageAccount: ${{ values.storageAccount }}
+      container: ${{ values.container }}
+      region: ${{ values.region }}
+      performance: ${{ values.performance }}
+      redundancy: ${{ values.redundancy }}
+      accessTier: ${{ values.accessTier }}
+      hierarchicalNamespace: ${{ values.hierarchicalNamespace }}
       encryption: default
-      redundancy: LRS
-      accesstier: Hot
-      hierarchicalnamespace: true
-

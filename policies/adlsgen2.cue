@@ -1,21 +1,27 @@
 name!: string
 fullyQualifiedName?: null | string
 description!: string
-kind: "workload"
+kind: "storage"
 version: string
-infrastructureTemplateId: string
-useCaseTemplateId: string
+infrastructureTemplateId!: string
+useCaseTemplateId!: string
 tags: [...string]
-dependsOn: [string, ...string]
+dependsOn: [...string]
 specific: {
-	subscription!: string
+	component: {
+		dpDomain!: string
+		dpNameMajorVersion!: string
+		name!: string
+	}
 	resourceGroup!: string
-	storageAccount!: string
-	container!: string
-	region!: string
-	performance!: string
-	redundancy!: string
-	accessTier!: string
-	hierarchicalNamespace!: bool
-	encryption: string
+	storageAccount!: string & =~"^[a-z0-9]{3,24}$"
+	containers!: string & =~"^(?:[a-z0-9][a-z0-9-]{2,62}[a-z0-9](?:,[a-z0-9][a-z0-9-]{2,62}[a-z0-9])*?)$"
+	performance!: string & =~"(?i)^(Premium|Standard)$"
+	redundancy!: string & =~"(?i)^(LRS|GRS|ZRS|GZRS)$"
+	accessTier!: string & =~"(?i)^(Hot|Cold)$"
+	infrastructureEncryptionEnabled!: bool
+	allowNestedItemsToBePublic!: bool
+	state: {
+		key!: string
+	}
 }

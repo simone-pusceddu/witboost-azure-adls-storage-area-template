@@ -1,3 +1,8 @@
+{% set domainNameNormalized = values.domain | replace(r/domain:| |-/, "") %}
+{% set dataProductNameNormalized = values.dataproduct.split(".")[1] | replace(r/ |-/g, "") %}
+{% set dataProductMajorVersion = values.identifier.split(".")[2] %}
+{% set componentNameNormalized = values.name.split(" ") | join("") | lower %}
+
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
@@ -5,10 +10,10 @@ metadata:
   description: |
         "${{ values.description }}"
   annotations:
-    gitlab.com/project-slug: 'AgileDMBSandbox/${{orgname}}/mesh.repository/${{ values.domain | replace(r/domain:| |-/, "") }}/${{ values.dataproduct.split(".")[1] | replace(r/ |-/g, "") }}/${{ values.name.split(" ") | join("") | lower }}'
+    gitlab.com/project-slug: 'AgileDMBSandbox/${{orgname}}/mesh.repository/${{ domainNameNormalized }}/${{ dataProductNameNormalized }}/${{ componentNameNormalized }}'
     backstage.io/techdocs-ref: dir:.
   links:
-    - url: ${{ "https://"+ values.storageAccount +".blob.core.windows.net/" + values.container }}
+    - url: ${{ "https://"+ values.storageAccount +".blob.core.windows.net/" }}
       title: Azure Storage Account with ADLSgen2 container
       icon: cloud
   tags:
@@ -40,13 +45,17 @@ spec:
         labelType: Manual
         state: Confirmed{% endfor %}{% else %}[]{% endif %}
     specific:
-      subscription: ${{ values.subscription }}
+      component:
+        dpDomain: ${{ domainNameNormalized }}
+        dpNameMajorVersion: ${{ dataProductNameNormalized + "_" + dataProductMajorVersion }}
+        name: ${{ componentNameNormalized }}
       resourceGroup: ${{ values.resourceGroup }}
       storageAccount: ${{ values.storageAccount }}
-      container: ${{ values.container }}
-      region: ${{ values.region }}
+      containers: {% if values.containers | length > 0 %}${{ values.containers | join(",") }}{% else %}''{% endif %}
       performance: ${{ values.performance }}
       redundancy: ${{ values.redundancy }}
       accessTier: ${{ values.accessTier }}
-      hierarchicalNamespace: ${{ values.hierarchicalNamespace }}
-      encryption: default
+      infrastructureEncryptionEnabled: ${{ values.infrastructureEncryptionEnabled }}
+      allowNestedItemsToBePublic: ${{ values.allowNestedItemsToBePublic }}
+      state:
+        key: ${{ domainNameNormalized + "_" + dataProductNameNormalized + "_" + dataProductMajorVersion + "_" + componentNameNormalized + ".tfstate" }}

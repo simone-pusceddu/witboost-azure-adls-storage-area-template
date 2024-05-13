@@ -21,15 +21,17 @@
 
 ## ADLS Gen2 Storage Area Deployment Information
 
-| Field Name                 | Value                               |
-|:---------------------------|:------------------------------------|
-| **Subscription**           | ${{ values.subscription }}          |
-| **Resource Group**         | ${{ values.resourceGroup }}         |
-| **Storage Account**        | ${{ values.storageAccount }}        |
-| **Container**              | ${{ values.container }}             |
-| **Region**                 | ${{ values.region }}                |
-| **Performance**            | ${{ values.performance }}           |
-| **Redundancy**             | ${{ values.redundancy }}            |
-| **Access Tier**            | ${{ values.accessTier }}            |
-| **Hierarchical Namespace** | ${{ values.hierarchicalNamespace }} |
-| **Encryption**             | default                             |
+| Field Name                           | Value                                         |
+|:-------------------------------------|:----------------------------------------------|
+| **Resource Group**                   | ${{ values.resourceGroup }}                   |
+| **Storage Account**                  | ${{ values.storageAccount }}                  |
+{%- if values.containers             | length > 0 %}                                  
+| **Containers**                       | ${{ values.containers | join(",") }}                     |
+{%- else %}
+|**Containers**| '' |
+{%- endif %}
+| **Performance**                      | ${{ values.performance }}                     |
+| **Redundancy**                       | ${{ values.redundancy }}                      |
+| **Access Tier**                      | ${{ values.accessTier }}                      |
+| **Enable Infrastructure Encryption** | ${{ values.infrastructureEncryptionEnabled }} |
+| **Allow Nested Items to be Public**  | ${{ values.allowNestedItemsToBePublic }}      |

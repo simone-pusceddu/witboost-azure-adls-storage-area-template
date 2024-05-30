@@ -138,10 +138,11 @@ spec:
             description: Name of the container.
             minLength: 3
             maxLength: 63
-            ui:field: RegexPicker # Not currently enforced.
-            validation:
-              regularExpression: ^(?:[a-z0-9][a-z0-9-]{2,62}[a-z0-9](?:,[a-z0-9][a-z0-9-]{2,62}[a-z0-9])*?)$
-              errorMessage: The field should only contain lowercase letters, numbers, and hyphens, and must begin with a letter or a number. Each hyphen must be preceded and followed by a non-hyphen character. The name must also be between 3 and 63 characters long.
+            ui:field: EntityNamePicker
+            pattern: '^(?:[a-z0-9][a-z0-9-]{2,62}[a-z0-9](?:,[a-z0-9][a-z0-9-]{2,62}[a-z0-9])*?)$'
+            ui:help: 'The field should only contain lowercase letters, numbers, and hyphens, and must begin with a letter or a number. Each hyphen must be preceded and followed by a non-hyphen character. The name must also be between 3 and 63 characters long.'
+            ui:options:
+              allowArbitraryValues: true
         performance:
           title: Performance
           type: string

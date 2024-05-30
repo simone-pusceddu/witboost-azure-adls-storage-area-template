@@ -16,9 +16,9 @@ specific: {
 	resourceGroup!: string
 	storageAccount!: string & =~"^[a-z0-9]{3,24}$"
 	containers!: string & =~"^(?:[a-z0-9][a-z0-9-]{2,62}[a-z0-9](?:,[a-z0-9][a-z0-9-]{2,62}[a-z0-9])*?)$"
-	performance!: string & =~"(?i)^(Premium|Standard)$"
-	redundancy!: string & =~"(?i)^(LRS|GRS|ZRS|GZRS)$"
-	accessTier!: string & =~"(?i)^(Hot|Cold)$"
+	performance!: string & =~"(?-i)^(Premium|Standard)$"
+	redundancy!: string & =~"(?-i)^(LRS|GRS|ZRS|GZRS)$"
+	accessTier!: string & =~"(?-i)^(Hot|Cold)$"
 	infrastructureEncryptionEnabled!: bool
 	allowNestedItemsToBePublic!: bool
 	state: {

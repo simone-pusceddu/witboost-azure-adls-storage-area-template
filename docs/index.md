@@ -29,7 +29,6 @@ _Example:_
 ### ADLS Gen2 Storage Area Deployment Information
 
 - Resource Group: (Required) The Resource Group to assign the Storage Account to. IT SHOULD ALREADY EXIST.
-- Storage Account: (Required) A name for the storage account where to create the ADLSgen2 container. If not existing, it will be created. The name must be unique across all existing storage account names in Azure.
 - Containers: (Required) The ADLS gen2 container to create into the storage account.
 - Performance: (Required) Determine whether you want to have premium performance for block blobs, file shares, or page blobs in your storage account.
 - Redundancy: (Required) The data in your Azure storage account is always replicated to ensure durability and high availability. Choose a replication strategy that matches your durability requirements.
@@ -42,7 +41,6 @@ _Example:_
 | Field Name                           | Example Value     |
 |:-------------------------------------|:------------------|
 | **Resource Group**                   | my-resource-group |
-| **Storage Account**                  | mystorageaccount  |
 | **Containers**                       | my-container      |
 | **Performance**                      | Standard          |
 | **Redundancy**                       | LRS               |

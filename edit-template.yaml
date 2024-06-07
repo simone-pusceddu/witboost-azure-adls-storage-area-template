@@ -110,13 +110,6 @@ spec:
           description: |
             Not editable. The Resource Group to assign the Storage Account to. IT SHOULD ALREADY EXIST.
           ui:disabled: true
-        storageAccount:
-          title: Storage Account
-          type: string
-          description: |
-            Not editable. A name for the storage account where to create the ADLSgen2 container.
-            If not existing, it will be created. The name must be unique across all existing storage account names in Azure.
-          ui:disabled: true
         containers:
           title: Containers
           type: array

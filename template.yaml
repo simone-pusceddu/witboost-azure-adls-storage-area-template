@@ -108,7 +108,6 @@ spec:
       description: Location of the Storage Area inside the ADLS Gen2.
       required:
         - resourceGroup
-        - storageAccount
         - containers
         - performance
         - redundancy
@@ -121,21 +120,6 @@ spec:
             Required. The Resource Group to assign the Storage Account to. IT
             SHOULD ALREADY EXIST.
           ui:field: EntityNamePicker
-          ui:options:
-            allowArbitraryValues: true
-        storageAccount:
-          title: Storage Account
-          type: string
-          description: >
-            Required. A name for the storage account where to create the
-            ADLSgen2 container.
-
-            If not existing, it will be created. The name must be unique across all existing storage account names in Azure.
-          ui:field: RegexPicker
-          validation:
-            errorMessage: The field should only contain lowercase letters and numbers. Name
-              must be between 3 and 24 characters.
-            regularExpression: ^[a-z0-9]{3,24}$
           ui:options:
             allowArbitraryValues: true
         containers:
@@ -246,17 +230,13 @@ spec:
           dependsOn: ${{ parameters.dependsOn }}
           tags: ${{ parameters.tags }}
           resourceGroup: ${{ parameters.resourceGroup }}
-          storageAccount: ${{ parameters.storageAccount }}
           containers: ${{ parameters.containers }}
           performance: ${{ parameters.performance }}
           redundancy: ${{ parameters.redundancy }}
           accessTier: ${{ parameters.accessTier.customRadio }}
           infrastructureEncryptionEnabled: ${{ parameters.infrastructureEncryptionEnabled }}
           allowNestedItemsToBePublic: ${{ parameters.allowNestedItemsToBePublic }}
-          destination: gitlab.com?owner=AgileDMBSandbox%2F${{orgname}}%2Fmesh.repository%2F${{
-            parameters.domain | replace(r/domain:| |-/, "") }}%2F${{
-            parameters.dataproduct.split(".")[1] | replace(r/ |-/g, "")
-            }}&repo=${{ parameters.name.split(" ") | join("") | lower }}
+          destination: &destination 'gitlab.com?owner=AgileDMBSandbox%2F${{orgname}}%2Fmesh.repository%2F${{parameters.domain | replace(r/domain:| |-/, "") }}%2F${{parameters.dataproduct.split(".")[1] | replace(r/ |-/g, "")}}&repo=${{ parameters.name.split(" ") | join("") | lower }}'
           rootDirectory: .
           useCaseTemplateId: urn:dmb:utm:azure-storage-adlsgen2-template:0.0.0
           infrastructureTemplateId: urn:dmb:itm:terraform-adls-provisioner:0
@@ -268,10 +248,7 @@ spec:
         allowedHosts:
           - gitlab.com
         description: This is ${{ parameters.name }}
-        repoUrl: gitlab.com?owner=AgileDMBSandbox%2F${{orgname}}%2Fmesh.repository%2F${{
-          parameters.domain | replace(r/domain:| |-/, "") }}%2F${{
-          parameters.dataproduct.split(".")[1] | replace(r/ |-/g, "")
-          }}&repo=${{ parameters.name.split(" ") | join("") | lower }}
+        repoUrl: *destination
         rootDirectory: .
         dataproduct: ${{ parameters.dataproduct }}
     - id: register

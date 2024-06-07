@@ -1,7 +1,7 @@
-{% set domainNameNormalized = values.domain | replace(r/domain:| |-/, "") %}
-{% set dataProductNameNormalized = values.dataproduct.split(".")[1] | replace(r/ |-/g, "") %}
+{% set domainNameNormalized = values.identifier.split(".")[0] %}
+{% set dataProductNameNormalized = values.identifier.split(".")[1] %}
 {% set dataProductMajorVersion = values.identifier.split(".")[2] %}
-{% set componentNameNormalized = values.name.split(" ") | join("") | lower %}
+{% set componentNameNormalized = values.identifier.split(".")[3] %}
 
 apiVersion: backstage.io/v1alpha1
 kind: Component
@@ -50,7 +50,6 @@ spec:
         dpNameMajorVersion: ${{ dataProductNameNormalized + "_" + dataProductMajorVersion }}
         name: ${{ componentNameNormalized }}
       resourceGroup: ${{ values.resourceGroup }}
-      storageAccount: ${{ values.storageAccount }}
       containers: {% if values.containers | length > 0 %}${{ values.containers | join(",") }}{% else %}''{% endif %}
       performance: ${{ values.performance }}
       redundancy: ${{ values.redundancy }}

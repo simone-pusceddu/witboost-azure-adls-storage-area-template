@@ -7,15 +7,10 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: ${{ values.identifier }}
-  description: |
-        "${{ values.description }}"
+  description: ${{ values.description | dump }}
   annotations:
     gitlab.com/project-slug: 'AgileDMBSandbox/${{orgname}}/mesh.repository/${{ domainNameNormalized }}/${{ dataProductNameNormalized }}/${{ componentNameNormalized }}'
     backstage.io/techdocs-ref: dir:.
-  links:
-    - url: ${{ "https://"+ values.storageAccount +".blob.core.windows.net/" }}
-      title: Azure Storage Account with ADLSgen2 container
-      icon: cloud
   tags:
     - azure
     - adlsgen2
@@ -29,8 +24,7 @@ spec:
   mesh:
     name: ${{ values.name }}
     fullyQualifiedName: ${{ values.fullyQualifiedName }}
-    description: | 
-          "${{ values.description }}"
+    description: ${{ values.description | dump }}
     kind: storage
     version: ${{ values.identifier.split(".")[2] + ".0.0" }}
     infrastructureTemplateId: ${{ values.infrastructureTemplateId }}
@@ -38,7 +32,7 @@ spec:
     dependsOn: {% if values.dependsOn | length > 0 %}{% for i in values.dependsOn %}
       - ${{ i }}{% endfor %}{% else %}[]{% endif %}
     platform: Azure
-    technology: ADLSgen2
+    technology: ADLSGen2
     tags: {% if values.tags | length > 0 %}{% for i in values.tags %}
       - tagFQN: ${{ i }}
         source: Tag
@@ -50,7 +44,8 @@ spec:
         dpNameMajorVersion: ${{ dataProductNameNormalized + "_" + dataProductMajorVersion }}
         name: ${{ componentNameNormalized }}
       resourceGroup: ${{ values.resourceGroup }}
-      containers: {% if values.containers | length > 0 %}${{ values.containers | join(",") }}{% else %}''{% endif %}
+      containers: {% if values.containers | length > 0 %}{% for i in values.containers %}
+        - ${{ i }}{% endfor %}{% else %}[]{% endif %}
       performance: ${{ values.performance }}
       redundancy: ${{ values.redundancy }}
       accessTier: ${{ values.accessTier }}

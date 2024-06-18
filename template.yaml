@@ -2,9 +2,8 @@ apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
   name: azure-storage-adlsgen2-template.1
-  title: ADLS gen2 Storage Area
-  description: This template can be used to create an Azure Storage account,
-    including Data Lake storage gen2 for a Data Product.
+  title: ADLS Gen2 Storage Area
+  description: Create an Azure Storage account, including Data Lake Storage Gen2 containers for a Data Product.
   mesh:
     icon: https://cdn-images-1.medium.com/v2/resize:fit:914/1*iYJgfYgxDWBcfWjl1twsag.png
   tags:
@@ -31,7 +30,7 @@ spec:
           type: string
           description: Display name for this storage area.
           ui:field: EntityNamePicker
-          default: ADLSgen2 Storage
+          default: ADLS Gen2 Storage
           ui:options:
             allowArbitraryValues: true
         fullyQualifiedName:
@@ -46,8 +45,7 @@ spec:
         domain:
           title: Domain
           type: string
-          description: Required. Domain of the Data Product this storage component belongs
-            to
+          description: Required. Domain of the Data Product this storage component belongs to
           ui:field: EntityPicker
           ui:options:
             allowArbitraryValues: false
@@ -85,7 +83,7 @@ spec:
           ui:options:
             allowArbitraryValues: false
         dependsOn:
-          title: Dependencies
+          title: Depends on
           type: array
           description: A component could depend on other components in the same Data
             Product. This information will be used to deploy the components in
@@ -93,10 +91,9 @@ spec:
           default: []
           items:
             type: string
-            ui:field: EntityComponentsPicker
+            ui:field: EntityRelationsPicker
             ui:fieldName: dataproduct
-            ui:options:
-              allowArbitraryValues: false
+            relation: hasPart
         tags:
           title: Tags
           type: array
@@ -104,6 +101,7 @@ spec:
           description: Tags for the component
           items:
             type: string
+
     - title: ADLS Gen2 Storage Area Deployment Information
       description: Location of the Storage Area inside the ADLS Gen2.
       required:
@@ -117,8 +115,7 @@ spec:
           title: Resource Group
           type: string
           description: >
-            Required. The Resource Group to assign the Storage Account to. IT
-            SHOULD ALREADY EXIST.
+            Required. The Resource Group to assign the Storage Account to. It must already exist
           ui:field: EntityNamePicker
           ui:options:
             allowArbitraryValues: true
@@ -136,7 +133,7 @@ spec:
             minLength: 3
             maxLength: 63
             ui:field: EntityNamePicker
-            pattern: ^(?:[a-z0-9][a-z0-9-]{2,62}[a-z0-9](?:,[a-z0-9][a-z0-9-]{2,62}[a-z0-9])*?)$
+            pattern: ^[a-z0-9][a-z0-9-]{2,62}[a-z0-9]$
             ui:help: The field should only contain lowercase letters, numbers, and hyphens,
               and must begin with a letter or a number. Each hyphen must be
               preceded and followed by a non-hyphen character. The name must
@@ -241,6 +238,7 @@ spec:
           useCaseTemplateId: urn:dmb:utm:azure-storage-adlsgen2-template:0.0.0
           infrastructureTemplateId: urn:dmb:itm:terraform-adls-provisioner:0
           useCaseTemplateVersion: 0.0.0
+
     - id: publish
       name: Publish
       action: witboostMeshComponent:publish:gitlab
@@ -251,12 +249,14 @@ spec:
         repoUrl: *destination
         rootDirectory: .
         dataproduct: ${{ parameters.dataproduct }}
+
     - id: register
       name: Register
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
         catalogInfoPath: /catalog-info.yaml
+
   output:
     links:
       - title: Repository

@@ -1,16 +1,14 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  description: |
-    "${{ values.description }}"
+  description: ${{ values.description | dump }}
 spec:
   type: storage
   lifecycle: experimental
   owner: ${{ values.developmentGroup }}
   mesh:
     fullyQualifiedName: ${{ values.fullyQualifiedName }}
-    description: |
-      "${{ values.description }}"
+    description: ${{ values.description | dump }}
     dependsOn: {% if values.dependsOn | length > 0 %}{% for i in values.dependsOn %}
       - ${{ i }}{% endfor %}{% else %}[]{% endif %}
     tags: {% if values.tags | length > 0 %}{% for i in values.tags %}
@@ -19,5 +17,6 @@ spec:
         labelType: Manual
         state: Confirmed{% endfor %}{% else %}[]{% endif %}
     specific:
-      containers: {% if values.containers | length > 0 %}${{ values.containers | join(",") }}{% else %}''{% endif %}
+      containers: {% if values.containers | length > 0 %}{% for i in values.containers %}
+        - ${{ i }}{% endfor %}{% else %}[]{% endif %}
       allowNestedItemsToBePublic: ${{ values.allowNestedItemsToBePublic }}

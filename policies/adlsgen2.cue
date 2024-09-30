@@ -26,10 +26,11 @@ specific: {
 }
 
 #OM_Tag: {
-	tagFQN:       string
+	tagFQN!:       string
 	description?: string | null
-	source:       string & =~"(?i)^(Tag|Glossary)$"
-	labelType:    string & =~"(?i)^(Manual|Propagated|Automated|Derived)$"
-	state:        string & =~"(?i)^(Suggested|Confirmed)$"
+	source!:       string & =~"(?i)^(Tag|Glossary)$"
+	labelType!:    string & =~"(?i)^(Manual|Propagated|Automated|Derived)$"
+	state!:        string & =~"(?i)^(Suggested|Confirmed)$"
 	href?:        string | null
+	...
 }

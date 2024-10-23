@@ -23,7 +23,7 @@ spec:
   domain: ${{ values.domain }}
   mesh:
     name: ${{ values.name }}
-    fullyQualifiedName: ${{ values.fullyQualifiedName }}
+    fullyQualifiedName:  ${{ values.domainName }} - ${{ values.dataproductName }} - version ${{ dataProductMajorVersion }} - ${{ values.name }}
     description: ${{ values.description | dump }}
     kind: storage
     version: ${{ values.identifier.split(".")[2] + ".0.0" }}

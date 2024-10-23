@@ -5,7 +5,7 @@
 | Field Name               | Value                                                                                                                                                                |
 |:-------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Name**                 | ${{ values.name }}                                                                                                                                                   |
-| **Fully Qualified Name** | ${{ values.fullyQualifiedName }}                                                                                                                                     |
+| **Fully Qualified Name** | ${{ values.domainName }} - ${{ values.dataproductName }} - version ${{ dataProductMajorVersion }} - ${{ values.name }}                                                                                                                                   |
 | **Description**          | ${{ values.description }}                                                                                                                                            |
 | **Domain**               | ${{ values.domain | replace(r/domain:| |-/, "") }}             |
 | **Data Product**         | ${{ values.dataproduct.split(".")[1] | replace(r/ |-/g, "") }} |

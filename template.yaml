@@ -245,8 +245,7 @@ spec:
           accessTier: ${{ parameters.accessTier.customRadio }}
           infrastructureEncryptionEnabled: ${{ parameters.infrastructureEncryptionEnabled }}
           allowNestedItemsToBePublic: ${{ parameters.allowNestedItemsToBePublic }}
-          destination: &destination 'gitlab.com?owner=AgileDMBSandbox%2F${{orgname}}%2Fmesh.repository%2F${{parameters.domain | replace(r/domain:| |-/, "") }}%2F${{parameters.dataproduct.split(".")[1] | replace(r/ |-/g, "")}}&repo=${{ parameters.name.split(" ") | join("") | lower }}'
-          rootDirectory: .
+          destination: &destination 'gitlab.com?owner=simone.pusceddu&repo=${{ parameters.name.split(" ") | join("") | lower }}'
           useCaseTemplateId: urn:dmb:utm:azure-storage-adlsgen2-template:0.0.0
           infrastructureTemplateId: urn:dmb:itm:terraform-adls-provisioner:0
           useCaseTemplateVersion: 0.0.0

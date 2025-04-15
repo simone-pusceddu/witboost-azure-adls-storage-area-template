@@ -1,8 +1,8 @@
 apiVersion: scaffolder.backstage.io/v1beta3
 kind: Template
 metadata:
-  name: azure-storage-adlsgen2-template.1
-  title: ADLS Gen2 Storage Area
+  name: azure-storage-adlsgen2-template-skeleton
+  title: ADLS Gen2 Storage Area (Skeleton)
   description: Create an Azure Storage account, including Data Lake Storage Gen2 containers for a Data Product.
   mesh:
     icon: https://cdn-images-1.medium.com/v2/resize:fit:914/1*iYJgfYgxDWBcfWjl1twsag.png
